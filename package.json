@@ -5,9 +5,9 @@
   "type": "module",
   "main": "app/src/index.js",
   "scripts": {
-    "start": "node app/src/index.js",
-    "dev": "nodemon app/src/index.js",
-    "db:migrate": "node app/src/database/migrate.js",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "db:migrate": "node /src/database/migrate.js",
     "format": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -37,8 +37,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@typescript-eslint/eslint-plugin": "^8.46.0",
-    "@typescript-eslint/parser": "^8.46.0",
     "eslint": "^9.37.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.3",
