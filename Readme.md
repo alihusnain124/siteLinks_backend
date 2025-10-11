@@ -11,12 +11,14 @@ This is the backend implementation for the XIHawks Smart Link Website, built usi
 ## Installation
 
 1. **Clone the repository**:
+
    ```bash
    git clone <repository-url>
    cd backend
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
@@ -45,9 +47,11 @@ This is the backend implementation for the XIHawks Smart Link Website, built usi
 ## Running the Application
 
 1. **Start the backend server**:
+
    ```bash
    npm run dev
    ```
+
    - The server will run on the port specified in the `.env` file (default: 5000). Access it at `http://localhost:5000`.
 
 2. **Development Mode**:
@@ -78,6 +82,7 @@ This is the backend implementation for the XIHawks Smart Link Website, built usi
 ## Deployment
 
 1. **Build for Production**:
+
    ```bash
    npm run build
    npm start

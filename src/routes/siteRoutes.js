@@ -12,9 +12,8 @@ router.get('/:id', authenticate, siteValidators.getById, siteController.getSiteB
 router.put('/:id', authenticate, isAdmin, siteValidators.update, siteController.updateSite);
 router.delete('/:id', authenticate, isAdmin, siteController.deleteSite);
 
-/////ai 
+/////ai
 
 router.post('/generate-desc', authenticate, isAdmin, siteController.generateDesc);
-
 
 export default router;

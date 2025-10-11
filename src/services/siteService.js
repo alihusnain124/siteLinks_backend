@@ -1,11 +1,10 @@
 import { SiteLink } from '../database/models/index.js';
 import { Op } from 'sequelize';
-import aiService from './aiService.js';
 
 class SiteService {
   async createSite(siteData) {
     try {
-      const { siteUrl, title, coverImage, category,description } = siteData;
+      const { siteUrl, title, coverImage, category, description } = siteData;
 
       const site = await SiteLink.create({
         siteUrl,

@@ -5,8 +5,4 @@ import createSiteLinkModel from './SiteLink.js';
 const User = createUserModel(sequelize);
 const SiteLink = createSiteLinkModel(sequelize);
 
-export {
-  sequelize,
-  User,
-  SiteLink
-};
+export { sequelize, User, SiteLink };

@@ -9,9 +9,9 @@ export const signup = asyncHandler(async (req, res) => {
     username,
     email,
     password,
-    role
+    role,
   });
-  return successResponse(res,201,'User registered successfully',result)
+  return successResponse(res, 201, 'User registered successfully', result);
 });
 
 export const login = asyncHandler(async (req, res) => {
@@ -20,7 +20,7 @@ export const login = asyncHandler(async (req, res) => {
   const result = await authService.login({
     email,
     password,
-    role
+    role,
   });
-  return successResponse(res,200,'Login successful',result)
+  return successResponse(res, 200, 'Login successful', result);
 });

@@ -1,4 +1,4 @@
-import  authService from '../services/authService.js';
+import authService from '../services/authService.js';
 import { errorResponse } from '../utils/responseHandler.js';
 
 export const authenticate = async (req, res, next) => {
@@ -6,7 +6,7 @@ export const authenticate = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return errorResponse(res,401,'Access denied. No token provided.')
+      return errorResponse(res, 401, 'Access denied. No token provided.');
     }
 
     const token = authHeader.split(' ')[1];
@@ -15,8 +15,8 @@ export const authenticate = async (req, res, next) => {
     req.user = decoded;
 
     next();
-  } catch (error) {
-   return errorResponse(res,401,'Invaild Token Provided')
+  } catch {
+    return errorResponse(res, 401, 'Invaild Token Provided');
   }
 };
 
@@ -31,7 +31,7 @@ export const optionalAuth = async (req, res, next) => {
     }
 
     next();
-  } catch (error) {
+  } catch {
     next();
   }
 };

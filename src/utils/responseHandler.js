@@ -1,9 +1,4 @@
-export const successResponse = (
-  ctx,
-  status,
-  message = 'Operation successful',
-  data = null,
-) => {
+export const successResponse = (ctx, status, message = 'Operation successful', data = null) => {
   ctx.status(status).json({
     success: true,
     message,

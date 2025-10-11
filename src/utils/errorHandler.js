@@ -9,7 +9,7 @@ class AppError extends Error {
 }
 
 const errorHandler = (err, req, res, next) => {
-  let error = { ...err };
+  const error = { ...err };
   error.message = err.message;
 
   if (process.env.NODE_ENV === 'development') {

@@ -16,7 +16,7 @@ const sequelize = new Sequelize(
       underscored: false,
       freezeTableName: true,
     },
-  }
+  },
 );
 
 export const testConnection = async () => {

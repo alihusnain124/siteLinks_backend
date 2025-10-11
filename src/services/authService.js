@@ -8,7 +8,7 @@ class AuthService {
       const { username, email, password, role } = userData;
 
       const existingUser = await User.findOne({ where: { email } });
-      if (existingUser) throw new Error('User with this email already exists')
+      if (existingUser) throw new Error('User with this email already exists');
       const existingUsername = await User.findOne({ where: { username } });
       if (existingUsername) throw new Error('Username is already taken');
       const user = await User.create({
@@ -33,7 +33,7 @@ class AuthService {
       const user = await User.findOne({
         where: { email, role },
       });
-      if (!user)throw new Error('User not exists');
+      if (!user) throw new Error('User not exists');
       const isPasswordValid = await user.comparePassword(password);
       if (!isPasswordValid) throw new Error('Invalid password');
       const token = this.generateToken(user);
@@ -62,7 +62,7 @@ class AuthService {
   verifyToken(token) {
     try {
       return jwt.verify(token, config.jwt.secret);
-    } catch (error) {
+    } catch {
       throw new Error('Invalid or expired token');
     }
   }
