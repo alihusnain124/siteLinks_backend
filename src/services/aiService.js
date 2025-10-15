@@ -1,5 +1,6 @@
 import config from '../config/config.js';
 import { GoogleGenAI } from '@google/genai';
+import { errorHandler } from '../utils/responseHandler.js';
 
 class AIService {
   constructor() {
@@ -11,22 +12,15 @@ class AIService {
   }
 
   async generateDescription(title, category, url = null) {
-    try {
-      const prompt = this.createDescriptionPrompt(title, category, url);
-      const result = await this.genAI.models.generateContent({
-        model: 'gemini-2.0-flash',
-        contents: prompt,
-      });
+    const prompt = this.createDescriptionPrompt(title, category, url);
+    const result = await this.genAI.models.generateContent({
+      model: 'gemini-2.0-flash',
+      contents: prompt,
+    });
 
-      const description = result.text;
-      const cleanedDescription = description.trim();
-      return cleanedDescription;
-    } catch (error) {
-      if (error.message && error.message.includes('API key')) {
-        throw new Error('AI service not configured properly. Please check your Gemini API key.');
-      }
-      throw new Error(`AI generation failed: ${error.message}`);
-    }
+    const description = result.text;
+    const cleanedDescription = description.trim();
+    return cleanedDescription;
   }
 
   createDescriptionPrompt(title, category, url) {

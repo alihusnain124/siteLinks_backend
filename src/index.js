@@ -2,10 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import config from './config/config.js';
-import { testConnection, syncDatabase } from './database/database.js';
 import routes from './routes/index.js';
-import { errorHandler, notFoundHandler } from './utils/errorHandler.js';
-import { seedAdmin } from './database/seeders/adminSeeder.js';
+import { errorHandler, notFoundHandler } from './utils/responseHandler.js';
+import { migrate } from './database/migrate.js';
 
 const app = express();
 
@@ -22,7 +21,6 @@ if (config.nodeEnv === 'development') {
 }
 
 app.use('/api', routes);
-
 app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -36,15 +34,7 @@ app.use(errorHandler);
 
 const startServer = async () => {
   try {
-    const dbConnected = await testConnection();
-
-    if (!dbConnected) {
-      console.error('Failed to connect to database. Please check your configuration.');
-      process.exit(1);
-    }
-    // Uncomment to sync DB on startup (use with caution in prod)
-    await syncDatabase({ alter: false });
-    await seedAdmin();
+    // migrate();
     const PORT = config.port;
     app.listen(PORT, () => {
       console.log(` Server is running on port ${PORT}.`);

@@ -1,49 +1,54 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../database/models/index.js';
 import config from '../config/config.js';
+import { ApiError } from '../utils/responseHandler.js';
 
 class AuthService {
   async signup(userData) {
-    try {
-      const { username, email, password, role } = userData;
+    const { username, email, password, role, token } = userData;
+    await this.verifyCloudflareToken(token);
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) throw ApiError(400, 'User with this email already exists');
+    const existingUsername = await User.findOne({ where: { username } });
+    if (existingUsername) throw ApiError(400, 'Username is already taken');
+    const user = await User.create({
+      username,
+      email,
+      password,
+      role: role || 'user',
+    });
+    const jwtToken = this.generateToken(user);
+    return {
+      user: user.toJSON(),
+      token: jwtToken,
+    };
+  }
 
-      const existingUser = await User.findOne({ where: { email } });
-      if (existingUser) throw new Error('User with this email already exists');
-      const existingUsername = await User.findOne({ where: { username } });
-      if (existingUsername) throw new Error('Username is already taken');
-      const user = await User.create({
-        username,
-        email,
-        password,
-        role: role || 'user',
-      });
-      const token = this.generateToken(user);
-      return {
-        user: user.toJSON(),
-        token,
-      };
-    } catch (error) {
-      throw error;
-    }
+  async verifyCloudflareToken(token) {
+    const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${process.env.TURNSTILE_SECRET_KEY}&response=${token}`,
+    });
+    const outcome = await verifyRes.json();
+    if (!outcome.success) throw ApiError(400, 'Captcha failed');
+    return true;
   }
 
   async login(credentials) {
-    try {
-      const { email, password, role } = credentials;
-      const user = await User.findOne({
-        where: { email, role },
-      });
-      if (!user) throw new Error('User not exists');
-      const isPasswordValid = await user.comparePassword(password);
-      if (!isPasswordValid) throw new Error('Invalid password');
-      const token = this.generateToken(user);
-      return {
-        user: user.toJSON(),
-        token,
-      };
-    } catch (error) {
-      throw error;
-    }
+    const { email, password, role, token } = credentials;
+    await this.verifyCloudflareToken(token);
+    const user = await User.findOne({
+      where: { email, role },
+    });
+    if (!user) throw ApiError(400, 'User not found');
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) throw ApiError(400, 'Invalid password');
+    const jwtToken = this.generateToken(user);
+    return {
+      user: user.toJSON(),
+      token: jwtToken,
+    };
   }
 
   generateToken(user) {
@@ -60,11 +65,7 @@ class AuthService {
   }
 
   verifyToken(token) {
-    try {
-      return jwt.verify(token, config.jwt.secret);
-    } catch {
-      throw new Error('Invalid or expired token');
-    }
+    return jwt.verify(token, config.jwt.secret);
   }
 }
 

@@ -1,5 +1,6 @@
 import { testConnection, syncDatabase } from './database.js';
-const migrate = async () => {
+import { seedAdmin } from './seeders/adminSeeder.js';
+export const migrate = async () => {
   try {
     console.log('Starting Syncing...\n');
     const connected = await testConnection();
@@ -7,12 +8,12 @@ const migrate = async () => {
       console.error(' Migration failed: Could not connect to database');
       process.exit(1);
     }
-    await syncDatabase({ alter: true });
+    await syncDatabase({ alter: false });
+    await seedAdmin();
+
     process.exit(0);
   } catch (error) {
     console.error(' Syncing error:', error);
     process.exit(1);
   }
 };
-
-migrate();
