@@ -34,7 +34,7 @@ app.use(errorHandler);
 
 const startServer = async () => {
   try {
-    // migrate();
+    migrate();
     const PORT = config.port;
     app.listen(PORT, () => {
       console.log(` Server is running on port ${PORT}.`);
